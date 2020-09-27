@@ -1,0 +1,50 @@
+<html>
+  <head>
+    <title>Jobsity Chat | #{{ room }}</title>
+  </head>
+  <body>
+    <p>Chatting on #{{ room }} as @{{ username }}</p>
+    <form id="message-input-form">
+      <input type="text" id="message-input" placeholder="Enter your message" />
+      <button type="submit">Send</button><br /><br />
+    </form>
+    {% for message in messages %}
+    <div><b>@{{ message["username"] }}:</b> {{ message["message"] }}</div>
+    {% endfor %}
+    <div id="messages"></div>
+  </body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+  <script>
+    const socket = io.connect("http://127.0.0.1:5000/");
+    socket.on("connect", function () {
+      socket.emit("join", {
+        username: "{{ username }}",
+        room: "{{ room }}",
+      });
+      let messageInput = document.getElementById("message-input");
+      document.getElementById("message-input-form").onsubmit = function (e) {
+        e.preventDefault(0);
+        let message = messageInput.value.trim();
+        if (message.length) {
+          socket.emit("message", {
+            username: "{{ username }}",
+            room: "{{ room }}",
+            message: message,
+          });
+        }
+        messageInput.value = "";
+        messageInput.focus();
+      };
+    });
+    socket.on("join", function (data) {
+      const messageNode = document.createElement("div");
+      messageNode.innerHTML = `<b>@${data["username"]}</b> has joined the room!`;
+      document.getElementById("messages").appendChild(messageNode);
+    });
+    socket.on("message", function (data) {
+      const messageNode = document.createElement("div");
+      messageNode.innerHTML = `<b>@${data["username"]}:</b> ${data["message"]}`;
+      document.getElementById("messages").appendChild(messageNode);
+    });
+  </script>
+</html>

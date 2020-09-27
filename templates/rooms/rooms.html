@@ -1,0 +1,17 @@
+<html>
+  <head>
+    <title>Jobsity Chat | Rooms</title>
+  </head>
+  <body>
+    <p>Logged in as @{{ username }}</p>
+    <p>Available Rooms:</p>
+    {% for room in rooms %}
+    <div>
+      <form action="rooms/{{ room['name'] }}">
+        <label>#{{ room['name'] }}</label>
+        <button type="submit">Join</button>
+      </form>
+    </div>
+    {% endfor %}
+  </body>
+</html>
