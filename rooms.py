@@ -9,10 +9,9 @@ import sys
 
 rooms = Blueprint('rooms', __name__)
 
-# Endpoint to create a new account, it takes in a username and a password,
-# checks if the username is available and if so uses sha256 to encrypt the
-# the user password and creates the record on the database.
-
+# Endpoint to see all the available room. It checks if the current user
+# is logged in and if so it renders the UI for that user to pick a room
+# to join and start chatting.
 
 @ rooms.route('/rooms', methods=['GET'])
 @db_connect
@@ -28,9 +27,9 @@ def rooms_list(current_user, db_cursor, db_connection):
         return render_template("/rooms/rooms.html", username=current_user['username'], rooms=rooms)
 
 
-# Endpoint to create a new account, it takes in a username and a password,
-# checks if the username is available and if so uses sha256 to encrypt the
-# the user password and creates the record on the database.
+# Endpoint to enter a room. It takes the room name from the path, check
+# if the current user is logged in an if so displays the chat interface
+# after fetching the last 50 messages on that room.
 
 @ rooms.route('/rooms/<string:room>', methods=['GET'])
 @db_connect
