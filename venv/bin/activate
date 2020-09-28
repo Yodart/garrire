@@ -37,7 +37,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="/Users/b/Desktop/jobsity-chat/venv"
+VIRTUAL_ENV="/Users/b/Documents/GitHub/jobsity-chat/venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
