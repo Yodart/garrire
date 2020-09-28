@@ -25,17 +25,14 @@ def create_user(db_cursor, db_connection):
         db_cursor.execute(
             "SELECT username FROM users WHERE username=%s", ([username]))
         user_data = db_cursor.fetchall()[0]
-        print(jsonify({'error': 'username taken.'}))
         return render_template("/signup/fail.html")
     except:
         try:
             db_cursor.execute(
                 "INSERT INTO users (username,password) values(%s,%s)", (username, hashed_password))
             db_connection.commit()
-            print(jsonify({'message': 'User created!'}))
             return redirect("http://45.56.96.56:5000/login")
         except:
-            print(jsonify({'error': "Unable to create user", "traceback": str(sys.exc_info())}))
             return render_template("/signup/fail.html"),401
 
 

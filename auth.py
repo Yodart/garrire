@@ -21,7 +21,6 @@ def require_auth_token(f):
         if 'token' in session:
             token = session['token']
         if not token:
-            print(jsonify({'error': 'Missing auth token'}))
             return redirect("http://45.56.96.56:5000/login")
         try:
             data = jwt.decode(token, 'secret')
@@ -30,7 +29,6 @@ def require_auth_token(f):
             user_data = db_cursor.fetchall()[0]
             user = {'username': user_data[0]}
         except:
-            print(jsonify({'error': 'Invalid auth token. Please login to your account'}))
             return redirect("http://45.56.96.56:5000/login")
         return f(user, *args, **kwargs)
     return decorated
@@ -60,8 +58,6 @@ def login(db_cursor, db_connection):
                 {'username': user['username'], 'exp': datetime.datetime.utcnow() + datetime.timedelta(days=30)}, 'secret')
             session["token"] = token
             return redirect("http://45.56.96.56:5000/rooms")
-        print(jsonify({'message': "Wrong Password"}))
         return render_template("/login/fail.html")
     except:
-         print(jsonify({'error': "Unable to find user", "traceback": str(sys.exc_info())}))
          return render_template("/login/fail.html")
