@@ -30,7 +30,6 @@ services:
     depends_on:
       - db
       - rabbitmq
-      - bot
     command: bash -c 'while !/dev/tcp/db/5432; do sleep 1; done; python3 api.py'
     volumes:
       - ./web/:/usr/src/app/
