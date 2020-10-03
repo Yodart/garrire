@@ -37,6 +37,7 @@ services:
 
   bot:
     build: ./bot
+    command: python3 bot.py
     links:
       - rabbitmq
       - web
