@@ -24,6 +24,7 @@ services:
     build: ./web
     links:
       - rabbitmq
+      - db
     depends_on:
       - db
       - rabbitmq
