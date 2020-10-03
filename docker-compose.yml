@@ -1,0 +1,54 @@
+version: "3.7"
+
+services:
+  db:
+    image: postgres
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=jobsity
+      - POSTGRES_PASSWORD=jobsity
+      - POSTGRES_DB=jobsitychatdb
+
+  rabbitmq:
+    image: "rabbitmq:3"
+    hostname: rabbit
+    labels:
+      NAME: "rabbit"
+    # environment:
+    #   RABBITMQ_DEFAULT_USER: "guest"
+    #   RABBITMQ_DEFAULT_PASS: "guest"
+    #   RABBITMQ_DEFAULT_VHOST: "/"
+    ports:
+      - 5672:5672
+      - 15672:15672
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "5672"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  web:
+    build: ./web
+    links:
+      - rabbitmq
+    depends_on:
+      - db
+      - rabbitmq
+    command: bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; python3 api.py'
+    volumes:
+      - ./web/:/usr/src/app/
+    ports:
+      - 5000:5000
+    env_file:
+      - ./.env.dev
+
+  bot:
+    build: ./bot
+    links:
+      - rabbitmq
+      - web
+    command: bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; python3 bot.py'
+    volumes:
+      - ./bot/:/usr/src/bot/
