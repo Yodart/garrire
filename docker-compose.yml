@@ -10,6 +10,8 @@ services:
       - POSTGRES_USER=jobsity
       - POSTGRES_PASSWORD=jobsity
       - POSTGRES_DB=jobsitychatdb
+    ports:
+      - 5432:5432
 
   rabbitmq:
     image: "rabbitmq:3"
@@ -28,7 +30,8 @@ services:
     depends_on:
       - db
       - rabbitmq
-    command: bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; python3 api.py'
+    # command: bash -c 'while !/dev/tcp/db/5432; do sleep 1; done; python3 api.py'
+    command: python3 api.py
     volumes:
       - ./web/:/usr/src/app/
     ports:
