@@ -1,5 +1,5 @@
 # jobsity-chat
-[ Python, Flask, SocketIO, PostgreSQL ] Real time chat application, includes user creation and authetication with jwt, multiple chat rooms. Also includes a stock price checking bot built around RabbitMQ  🐍 
+[ Python, Flask, SocketIO, PostgreSQL, RabbitMQ ] Real time chat application, includes user creation and authetication with jwt, multiple chat rooms. Also includes a stock price checking bot built around RabbitMQ  🐍 
 
 To setup this project locally perform the follwoing steps.
 
